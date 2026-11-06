@@ -132,17 +132,17 @@
 
 ## Your Development Log
 
-### Entry 1 - [Date and Time]
+### Entry 1 - [2026/11/6, 10;15 PM]
 **What I did**:
-
+Featcure 1 Ready Queue lock
 **Details**:
-
+Added the required import declared a reentrantlock for the shared ready queue and modified the add() and poll() methods to protect access to the shared list
 **Challenges**:
-
+Understanding how to protect shared data when multiple CPU access the ready queue simultaneosly
 **Solution**:
-
+Used lock() 
 **Time spent**:
-
+15m
 ---
 
 ### Entry 2 - [Date and Time]
