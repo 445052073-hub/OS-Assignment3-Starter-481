@@ -132,17 +132,17 @@
 
 ## Your Development Log
 
-### Entry 1 - [Date and Time]
-**What I did**:
+### Entry 1 - [2026/11/8]
+**What I did**:Feature 1, ready queue lock
 
 **Details**:
-
+added the required imports, declared a reentrantLock for the shared ready queue and modified the add() and poll() methods to protect access to the shared list
 **Challenges**:
-
+Understand how to protect share data when multiple CPU access the ready queue simultaneosly
 **Solution**:
-
+Used Lock()
 **Time spent**:
-
+22
 ---
 
 ### Entry 2 - [Date and Time]
