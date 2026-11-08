@@ -147,21 +147,31 @@ private final ReentrantLock queueLock = new ReentrantLock();
 
     public Process processOf(Thread thread) {
         // TODO Feature 1: protect this access
+     queueLock.lock();
+    try {
         return map.get(thread);
+    } finally {
+        queueLock.unlock();
     }
-
+}
     // Names of the processes currently waiting in the queue (used to display the ready queue)
     public String snapshot() {
         // TODO Feature 1: protect this critical section
+queueLock.lock();
+    try {
         StringBuilder sb = new StringBuilder();
+
         for (Thread t : list) {
             if (sb.length() > 0) sb.append(" → ");
             sb.append(map.get(t).getName());
         }
+
         return sb.length() == 0 ? "empty" : sb.toString();
+
+    } finally {
+        queueLock.unlock();
     }
 }
-
 // Class representing a process (same as Assignment 1) - executes ONE time quantum per thread start
 class Process implements Runnable {
     private final String name;
