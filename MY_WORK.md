@@ -149,17 +149,21 @@ Used Lock()
 
 ---
 
-### Entry 2 - [Date and Time]
+### Entry 2 - [2026/11/8]
 **What I did**:
+Feature1, ready queue lock
 
 **Details**:
+Modified the processOf() and snapshot() methods to protect access to the shared ready queue and map
 
 **Challenges**:
+Ensuring that reading shared data is threadSafe
 
 **Solution**:
+Used reentrantLock with try finally to protect both methods and safely release the lock
 
 **Time spent**:
-
+39
 ---
 
 ### Entry 3 - [Date and Time]
