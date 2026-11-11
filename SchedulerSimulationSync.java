@@ -61,28 +61,39 @@ class SharedStats {
     static final java.util.concurrent.atomic.AtomicInteger busyWaitPolls = new java.util.concurrent.atomic.AtomicInteger(0);
 
     // TODO Feature 2: declare the lock(s) protecting the three shared variables above here.
+    private static final ReentrantLock contextLock = new ReentrantLock();
+private static final ReentrantLock completedLock = new ReentrantLock();
+private static final ReentrantLock serviceLock = new ReentrantLock();
     // Think about it: ONE lock for the three variables, or ONE lock PER variable? (you must justify it in MY_WORK.md)
 
     public static void incrementContextSwitch() {
         // TODO Feature 2: protect this critical section
-        int tmp = contextSwitchCount;       // 1) read
-        RaceWindow.pause();                 //    <- another thread can read the SAME value here
-        contextSwitchCount = tmp + 1;       // 2) write  (one increment is lost if someone else did the same)
-    }
+      contextLock.lock();
+    try {
+        int tmp = contextSwitchCount;
+        RaceWindow.pause();
+        contextSwitchCount = tmp + 1;
+    } finally {
+        contextLock.unlock(); }}
 
     public static void incrementCompletedProcess() {
         // TODO Feature 2: protect this critical section
+      completedLock.lock();
+    try {
         int tmp = completedProcessCount;
         RaceWindow.pause();
-        completedProcessCount = tmp + 1;
-    }
+        completedProcessCount = tmp + 1;  } finally {
+        completedLock.unlock();}}
 
     public static void addServiceTime(int ms) {
         // TODO Feature 2: protect this critical section
+     serviceLock.lock();
+    try {
         long tmp = totalServiceTime;
         RaceWindow.pause();
         totalServiceTime = tmp + ms;
-    }
+    } finally {
+        serviceLock.unlock(); }}
 
     // Readers must also be protected (a read in the middle of an update is not safe either)
     public static int getCompletedProcessCount() {
