@@ -166,17 +166,21 @@ Used reentrantLock with try finally to protect both methods and safely release t
 39
 ---
 
-### Entry 3 - [Date and Time]
+### Entry 3 - [2026/11/11]
 **What I did**:
+Feature 2, Statics locks
 
 **Details**:
+Added three locks and modified the first three counter update methods
 
 **Challenges**:
+preventing race condition in shared counters
 
 **Solution**:
+Used reentrantLock with try finally
 
 **Time spent**:
-
+15m
 ---
 
 ### Entry 4 - [Date and Time]
