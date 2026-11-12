@@ -98,18 +98,27 @@ private static final ReentrantLock serviceLock = new ReentrantLock();
     // Readers must also be protected (a read in the middle of an update is not safe either)
     public static int getCompletedProcessCount() {
         // TODO Feature 2: protect this read
+      completedLock.lock();
+    try {
         return completedProcessCount;
-    }
+    } finally {
+        completedLock.unlock(); }}
 
     public static int getContextSwitchCount() {
         // TODO Feature 2: protect this read
+      contextLock.lock();
+    try {
         return contextSwitchCount;
-    }
+    } finally {
+        contextLock.unlock();  }}
 
     public static long getTotalServiceTime() {
         // TODO Feature 2: protect this read
+       serviceLock.lock();
+    try {
         return totalServiceTime;
-    }
+    } finally {
+        serviceLock.unlock();  }}
 }}
 
 // ⚠️ THE READY QUEUE: shared by ALL the CPU threads ⚠️
