@@ -191,11 +191,11 @@ queueLock.lock();
 
     } finally {
         queueLock.unlock();
-    }
+    }}
 // Wake up CPUs so they can terminate
 public void wakeAllCPUs() {
     readyCount.release(SharedStats.totalCPUs);
-}
+}}
 // Class representing a process (same as Assignment 1) - executes ONE time quantum per thread start
 class Process implements Runnable {
     private final String name;
