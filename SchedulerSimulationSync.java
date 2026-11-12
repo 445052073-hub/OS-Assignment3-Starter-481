@@ -130,6 +130,7 @@ class ReadyQueue {
 
     // TODO Feature 1: declare the lock protecting `list` and `map` here
 private final ReentrantLock queueLock = new ReentrantLock();
+    private final Semaphore readyCount = new Semaphore(0);
     // TODO Feature 3: declare the counting semaphore that counts the processes waiting in the ready queue here
 
     // Add a process to the ready queue (new process, or a process that did not finish its quantum)
@@ -144,7 +145,7 @@ private final ReentrantLock queueLock = new ReentrantLock();
         queueLock.unlock();}
 
         // TODO Feature 3: signal that one more process is available in the queue
-
+readyCount.release();
         System.out.println(Colors.BLUE + "  ➕ " + Colors.BOLD + Colors.CYAN + process.getName() + Colors.RESET +
                 Colors.BLUE + " (Priority: " + process.getPriority() + ") added to ready queue" + Colors.RESET +
                 " │ Remaining: " + Colors.YELLOW + process.getRemainingTime() + "ms" + Colors.RESET +
@@ -191,6 +192,9 @@ queueLock.lock();
     } finally {
         queueLock.unlock();
     }
+// Wake up CPUs so they can terminate
+public void wakeAllCPUs() {
+    readyCount.release(SharedStats.totalCPUs);
 }
 // Class representing a process (same as Assignment 1) - executes ONE time quantum per thread start
 class Process implements Runnable {
