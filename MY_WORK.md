@@ -32,9 +32,9 @@
 
 | Field | Your Answer |
 |-------|-------------|
-| **Full Name** | [Write your full name here] |
-| **Student ID** | [Write your student ID here] |
-| **University Email** | [yourid]@std.psau.edu.sa |
+| **Full Name** | [HANEEN SAEED ALOMARI] |
+| **Student ID** | [445052073] |
+| **University Email** | [445052073@std.psau.edu.sa |
 | **GitHub Username** | [your-github-username] |
 | **Repository Link** | [Paste your repository link here] |
  
@@ -183,16 +183,21 @@ Used reentrantLock with try finally
 15m
 ---
 
-### Entry 4 - [Date and Time]
+### Entry 4 - [2026/11/12]
 **What I did**:
+Feature 2 and 3 synchronization
 
 **Details**:
+Completed the remaining statistics methods and started implementing the semaphore by adding the required code and modifying the firs three parts of feature3
 
 **Challenges**:
+Understanding how the semaphore controls CPU waiting
 
 **Solution**:
+Used lock to protect statistics and semaphore to manage process avalibility
 
 **Time spent**:
+27m
 
 ---
 
