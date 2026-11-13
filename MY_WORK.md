@@ -235,13 +235,17 @@ Used semaphore to manage process availability
 
 > 💡 **TIP:** Fill this in **last**, after all entries are written.
 
-**Total time spent on assignment**: [X hours]
+**Total time spent on assignment**: [2 hours]
 
 **Most challenging part**:
+The most challenging part was fixing race conditions in the ready queue and shared statistics. I had to use ReentrantLock correctly to protect shared data and prevent incorrect results
 
 **Most interesting learning**:
+The most interesting learning was using semaphores to coordinate CPUs and processes. I learned how acquire() and release() help CPUs wait for available processes instead of continuously checking the queue
 
 **What I would do differently next time**:
+
+Next time I would plan the synchronization design before writing the code. I would also test each feature separately before combining all the features. This would make it easier to find and fix errors
 
 ---
 
@@ -418,13 +422,13 @@ getTotalServiceTime()|serviceLock|Protects reading the total service time|
 ## Summary
 
 **Key concepts I understood through these questions:**
-1.
-2.
-3.
+1.Race conditions and how locks (ReentrantLock) prevent them
+2.Semaphores and how they coordinate CPUs and processes
+3.Deadlocks, mutual exclusion, and producer-consumer synchronization
 
 **Concepts I need to study more:**
-1.
-2.
+1.Lock granularity and bounded waiting
+2.Deadlock prevention and semaphore synchronization
 
 ---
 
