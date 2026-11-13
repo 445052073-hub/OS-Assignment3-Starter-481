@@ -201,17 +201,21 @@ Used lock to protect statistics and semaphore to manage process avalibility
 
 ---
 
-### Entry 5 - [Date and Time]
+### Entry 5 - [2026/11/13]
 **What I did**:
+Feature 3 semaphore
 
 **Details**:
+completed the remaining semaphore implementation in the run() method
 
 **Challenges**:
+Handling CPU waiting and shutdown
 
 **Solution**:
+Used semaphore to manage process availability
 
 **Time spent**:
-
+20m
 ---
 
 ### Entry 6 - [Optional - Date and Time]
@@ -257,7 +261,7 @@ Used lock to protect statistics and semaphore to manage process avalibility
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+[I learned that multithreading allows multiple tasks to run concurrently within a program. I understood how to create and start threads using Java. I also learned how threads share resources and why synchronization is important. Using locks and semaphores helps prevent race conditions and coordinate threads. This assignment helped me understand how the operating system manages multiple CPUs and processes]
 
 ## Question 2: What was the most challenging part of this assignment?
 
@@ -265,7 +269,7 @@ Used lock to protect statistics and semaphore to manage process avalibility
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+[The most challenging part was handling shared resources between multiple threads. Several CPUs could access the ready queue and update shared variables at the same time. This could cause race conditions and incorrect results. Understanding how to use locks correctly was also challenging. I needed to make sure that synchronization did not cause deadlocks or unnecessary waiting]
 
 ## Question 3: How did you overcome the challenges you faced?
 
@@ -273,7 +277,7 @@ Used lock to protect statistics and semaphore to manage process avalibility
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+[I overcame these challenges by studying the code and understanding how each thread works. I used ReentrantLock to protect shared data and prevent multiple threads from modifying it simultaneously. I also used a semaphore to coordinate CPUs and processes. I tested the program after each change to check that the results were correct. This helped me identify problems and improve my understanding of synchronization]
 
 ## Question 4: Where can synchronization concepts be applied in real-world applications?
 
@@ -281,7 +285,7 @@ Used lock to protect statistics and semaphore to manage process avalibility
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+[Multithreading is used in many real-world applications to perform multiple tasks efficiently. Web servers use multiple threads to handle requests from different users. Games use threads to manage graphics, user input, and background tasks. Operating systems use concurrency to manage processes and system resources. These concepts help applications become more responsive and efficient]
 
 ### Optional: What would you like to learn more about?
 
@@ -315,20 +319,49 @@ Used lock to protect statistics and semaphore to manage process avalibility
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+[A race condition happens when multiple CPUs access shared data at the same time. This can cause lost updates and incorrect counter values. I used ReentrantLock to protect shared counters and ensure correct updates]
 
 Verification block of the **original starter**:
 ```
-[Paste the verification block (or the exception/watchdog message) of the starter here]
+[public static void incrementContextSwitch() {
+    int tmp = contextSwitchCount;
+    RaceWindow.pause();
+    contextSwitchCount = tmp + 1;
+}]
 ```
 
 Verification block of **my final version**:
 ```
-[Paste the verification block of your final version here (all lines ✔)]
+[private static final ReentrantLock contextLock =
+        new ReentrantLock();
+
+public static void incrementContextSwitch() {
+    contextLock.lock();
+    try {
+        int tmp = contextSwitchCount;
+        RaceWindow.pause();
+        contextSwitchCount = tmp + 1;
+    } finally {
+        contextLock.unlock();
+    }
+}]
 ```
 
 **Explanation of the timeline:**
-[Explain the lost update step by step.]
+[
+Initial value = 12
+CPU-1 reads 12
+CPU-2 reads 12
+CPU-1 updates the value to 13
+CPU-2 also updates the value to 13
+Final value = 13 instead of 14
+
+After Modification:
+CPU-1 locks the counter
+CPU-1 updates 12 to 13
+CPU-1 releases the lock
+CPU-2 acquires the lock and reads 13
+CPU-2 updates it to 14]
 
 ## Question 2: Critical Sections and Lock Granularity
 
@@ -338,12 +371,22 @@ Verification block of **my final version**:
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+[I used ReentrantLock to protect the ready queue and the three statistics counters. I used separate locks for each counter to reduce waiting and allow independent updates. This provides mutual exclusion and progress, but non-fair locks do not guarantee bounded waiting and may cause starvation]
 
 | Critical section (variable / method) | Lock used | Why it needs protection |
-|---|---|---|
-| [e.g., `ReadyQueue.poll()`] | [lock name] | [reason] |
-| [...] | [...] | [...] |
+
+add()| queueLock| Protects the list and map when adding processes|
+poll()| queueLock |Prevents multiple CPUs from removing the same process|
+processOf()| queueLock| Protects access to the maps|
+snapshot()| queueLock|Protects reading the shared queue and map|
+incrementContextSwitch()| contextLock| Prevents lost updates to the context switch counter|
+incrementCompletedProcess()|completedLock|Prevents lost updates to the completed process counter|
+addServiceTime()|serviceLock|Prevents incorrect updates to the total service time|
+getCompletedProcessCount()|completedLock|Protects reading the completed process counter|
+getContextSwitchCount()|contextLock|Protects reading the context switch counter|
+getTotalServiceTime()|serviceLock|Protects reading the total service time|
+
+
 
 ## Question 3: Busy Waiting vs Semaphore
 
@@ -353,7 +396,7 @@ Verification block of **my final version**:
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+[In the starter version, CPUs repeatedly check the empty queue, which wastes CPU time. The semaphore starts at 0 and increases by 1 whenever a process is added, representing the number of available processes. The final release(totalCPUs) wakes up all blocked CPUs so they can exit when no more processes will be added]
 
 ## Question 4: Classical Problems and Deadlock
 
@@ -364,13 +407,13 @@ Verification block of **my final version**:
 **Your Answer:** *(3-5 sentences)*
 
 **Classical problem and roles**:
-[Name the problem; who is the producer, who is the consumer?]
+[This is the Producer-Consumer problem; the main thread acts as the producer, while CPUs act as consumers when taking processes from the queue and producers when re-enqueuing them]
 
 **Semaphores for a bounded queue (name and initial value)**:
-[Name the three semaphores and their initial values.]
+[The three semaphores are empty = K (available slots), full = 0 (available processes), and mutex = 1 (protects the queue)]
 
 **Deadlock scenario and prevention**:
-[Describe the scenario and the necessary condition you would break.]
+[Deadlock can occur if a thread acquires the mutex before waiting for an empty slot, because it may block while holding the mutex and prevent a consumer from removing a process; we prevent this by breaking the hold-and-wait condition, waiting on empty before acquiring mutex]
 
 ## Summary
 
