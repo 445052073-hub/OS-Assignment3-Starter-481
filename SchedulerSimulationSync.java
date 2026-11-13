@@ -119,7 +119,7 @@ private static final ReentrantLock serviceLock = new ReentrantLock();
         return totalServiceTime;
     } finally {
         serviceLock.unlock();  }}
-}}
+}
 
 // ⚠️ THE READY QUEUE: shared by ALL the CPU threads ⚠️
 // In Assignment 1 only the main thread used the queue. Now several CPUs poll and re-enqueue processes
